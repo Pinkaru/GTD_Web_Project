@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main - Clarity Matrix</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1>Clarity Matrix</h1>
+            <nav>
+                <ul>
+                    <li><a href="/main" class="active">메인</a></li>
+                    <li><a href="/inbox">수신함</a></li>
+                    <li><a href="/today">오늘</a></li>
+                    <li><a href="/projects">프로젝트</a></li>
+                    <li><a href="/eisenhower_matrix">아이젠하워 매트릭스</a></li>
+                    <li><a href="/completed">완료</a></li>
+                    <li><a href="/settings">설정</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header>
+                <h2>메인 대시보드</h2>
+                <p>Clarity Matrix에 오신 것을 환영합니다! GTD 방법론과 아이젠하워 매트릭스로 효과적인 업무 관리를 시작하세요.</p>
+            </header>
+
+            <!-- 대시보드 통계 -->
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="total-tasks">12</div>
+                    <div class="stat-label">전체 작업</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="today-tasks">5</div>
+                    <div class="stat-label">오늘 할 일</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="completed-tasks">23</div>
+                    <div class="stat-label">완료한 작업</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="active-projects">3</div>
+                    <div class="stat-label">진행 중 프로젝트</div>
+                </div>
+            </div>
+
+            <!-- 빠른 작업 추가 -->
+            <div class="task-input-container">
+                <h3>빠른 작업 추가</h3>
+                <form id="quick-task-form">
+                    <input type="text" placeholder="새로운 작업을 입력하세요..." required>
+                    <select>
+                        <option value="urgent-important">긴급 & 중요</option>
+                        <option value="not-urgent-important" selected>긴급하지 않음 & 중요</option>
+                        <option value="urgent-not-important">긴급 & 중요하지 않음</option>
+                        <option value="not-urgent-not-important">긴급하지 않음 & 중요하지 않음</option>
+                    </select>
+                    <button type="submit">추가</button>
+                </form>
+            </div>
+
+            <!-- 아이젠하워 매트릭스 미리보기 -->
+            <div class="dashboard-section">
+                <h3>우선순위 현황</h3>
+                <div class="priority-overview">
+                    <div class="priority-card urgent-important">
+                        <h4>Q1: 긴급 & 중요</h4>
+                        <div class="task-count">3개</div>
+                        <p>즉시 처리가 필요한 작업</p>
+                    </div>
+                    <div class="priority-card not-urgent-important">
+                        <h4>Q2: 중요하지만 긴급하지 않음</h4>
+                        <div class="task-count">6개</div>
+                        <p>계획적으로 처리할 작업</p>
+                    </div>
+                    <div class="priority-card urgent-not-important">
+                        <h4>Q3: 긴급하지만 중요하지 않음</h4>
+                        <div class="task-count">2개</div>
+                        <p>위임하거나 빠르게 처리</p>
+                    </div>
+                    <div class="priority-card not-urgent-not-important">
+                        <h4>Q4: 긴급하지 않고 중요하지 않음</h4>
+                        <div class="task-count">1개</div>
+                        <p>제거하거나 나중에 처리</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 최근 활동 -->
+            <div class="dashboard-section">
+                <h3>최근 활동</h3>
+                <div class="recent-activities">
+                    <div class="activity-item">
+                        <span class="activity-time">10분 전</span>
+                        <span class="activity-text">"프로젝트 계획서 작성" 작업을 완료했습니다.</span>
+                    </div>
+                    <div class="activity-item">
+                        <span class="activity-time">1시간 전</span>
+                        <span class="activity-text">"회의 준비" 작업을 Q1으로 이동했습니다.</span>
+                    </div>
+                    <div class="activity-item">
+                        <span class="activity-time">2시간 전</span>
+                        <span class="activity-text">새로운 프로젝트 "웹사이트 리뉴얼"을 생성했습니다.</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/assets/js/app.js"></script>
+</body>
+</html>

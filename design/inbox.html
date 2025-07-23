@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수신함 - Clarity Matrix</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1>Clarity Matrix</h1>
+            <nav>
+                <ul>
+                    <li><a href="/main">메인</a></li>
+                    <li><a href="/inbox" class="active">수신함</a></li>
+                    <li><a href="/today">오늘</a></li>
+                    <li><a href="/projects">프로젝트</a></li>
+                    <li><a href="/eisenhower_matrix">아이젠하워 매트릭스</a></li>
+                    <li><a href="/completed">완료</a></li>
+                    <li><a href="/settings">설정</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header>
+                <h2>수신함</h2>
+            </header>
+            <div class="task-input-container">
+                <form id="task-form">
+                    <input type="text" id="task-input" placeholder="새 작업 추가..." required>
+                    <select id="task-quadrant-select">
+                        <option value="q1">긴급 & 중요</option>
+                        <option value="q2">긴급하지 않음 & 중요</option>
+                        <option value="q3" selected>긴급 & 중요하지 않음</option>
+                        <option value="q4">긴급하지 않음 & 중요하지 않음</option>
+                    </select>
+                    <button type="submit">추가</button>
+                </form>
+            </div>
+            <div class="task-list">
+                <ul id="inbox-task-list">
+                    <!-- 자바스크립트로 작업이 여기에 추가됩니다 -->
+                </ul>
+            </div>
+        </main>
+    </div>
+    <script src="/assets/js/app.js"></script>
+</body>
+</html>

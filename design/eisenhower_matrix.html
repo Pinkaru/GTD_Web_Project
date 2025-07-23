@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이젠하워 매트릭스 - Clarity Matrix</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1>Clarity Matrix</h1>
+            <nav>
+                <ul>
+                    <li><a href="/main">메인</a></li>
+                    <li><a href="/inbox">수신함</a></li>
+                    <li><a href="/today">오늘</a></li>
+                    <li><a href="/projects">프로젝트</a></li>
+                    <li><a href="/eisenhower_matrix" class="active">아이젠하워 매트릭스</a></li>
+                    <li><a href="/completed">완료</a></li>
+                    <li><a href="/settings">설정</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header>
+                <h2>아이젠하워 매트릭스</h2>
+            </header>
+            <div class="eisenhower-matrix">
+                <div class="matrix-quadrant" id="q1">
+                    <h3>긴급 & 중요</h3>
+                    <ul id="q1-list"></ul>
+                </div>
+                <div class="matrix-quadrant" id="q2">
+                    <h3>긴급하지 않음 & 중요</h3>
+                    <ul id="q2-list"></ul>
+                </div>
+                <div class="matrix-quadrant" id="q3">
+                    <h3>긴급 & 중요하지 않음</h3>
+                    <ul id="q3-list"></ul>
+                </div>
+                <div class="matrix-quadrant" id="q4">
+                    <h3>긴급하지 않음 & 중요하지 않음</h3>
+                    <ul id="q4-list"></ul>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/assets/js/app.js"></script>
+</body>
+</html>

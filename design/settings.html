@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>설정 - Clarity Matrix</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1>Clarity Matrix</h1>
+            <nav>
+                <ul>
+                    <li><a href="/main">메인</a></li>
+                    <li><a href="/inbox">수신함</a></li>
+                    <li><a href="/today">오늘</a></li>
+                    <li><a href="/projects">프로젝트</a></li>
+                    <li><a href="/eisenhower_matrix">아이젠하워 매트릭스</a></li>
+                    <li><a href="/completed">완료</a></li>
+                    <li><a href="/settings" class="active">설정</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header>
+                <h2>설정</h2>
+            </header>
+            <div class="settings-container">
+                <div class="settings-section">
+                    <h3>외부 도구 연동</h3>
+                    <div class="integration-list">
+                        <div class="integration-item" id="todoist-integration">
+                            <div class="integration-info">
+                                <div class="integration-icon">📋</div>
+                                <div class="integration-details">
+                                    <h4>Todoist</h4>
+                                    <p>개인 작업 관리 도구와 연동</p>
+                                    <div class="integration-status" id="todoist-status">연결되지 않음</div>
+                                </div>
+                            </div>
+                            <div class="integration-actions">
+                                <button id="todoist-connect-btn" onclick="app.showTodoistConnect()">연결</button>
+                                <button id="todoist-sync-btn" onclick="app.syncTodoist()" style="display: none;">동기화</button>
+                                <button id="todoist-disconnect-btn" onclick="app.disconnectTodoist()" style="display: none;">연결 해제</button>
+                            </div>
+                        </div>
+                        
+                        <div class="integration-item" id="google-calendar-integration">
+                            <div class="integration-info">
+                                <div class="integration-icon">📅</div>
+                                <div class="integration-details">
+                                    <h4>Google Calendar</h4>
+                                    <p>일정과 작업을 연동</p>
+                                    <div class="integration-status" id="google-calendar-status">연결되지 않음</div>
+                                </div>
+                            </div>
+                            <div class="integration-actions">
+                                <button id="google-calendar-connect-btn" onclick="app.showGoogleCalendarConnect()">연결</button>
+                                <button id="google-calendar-sync-btn" onclick="app.syncGoogleCalendar()" style="display: none;">동기화</button>
+                                <button id="google-calendar-disconnect-btn" onclick="app.disconnectGoogleCalendar()" style="display: none;">연결 해제</button>
+                            </div>
+                        </div>
+                        
+                        <div class="integration-item" id="jira-integration">
+                            <div class="integration-info">
+                                <div class="integration-icon">🎯</div>
+                                <div class="integration-details">
+                                    <h4>JIRA</h4>
+                                    <p>프로젝트 관리 도구와 연동</p>
+                                    <div class="integration-status" id="jira-status">연결되지 않음</div>
+                                </div>
+                            </div>
+                            <div class="integration-actions">
+                                <button id="jira-connect-btn" onclick="app.showJiraConnect()">연결</button>
+                                <button id="jira-sync-btn" onclick="app.syncJira()" style="display: none;">동기화</button>
+                                <button id="jira-disconnect-btn" onclick="app.disconnectJira()" style="display: none;">연결 해제</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sync-summary" id="sync-summary" style="display: none;">
+                        <h4>동기화 현황</h4>
+                        <div class="sync-stats">
+                            <div class="sync-stat">
+                                <span class="sync-number" id="total-synced">0</span>
+                                <span class="sync-label">동기화된 작업</span>
+                            </div>
+                            <div class="sync-stat">
+                                <span class="sync-number" id="last-sync">-</span>
+                                <span class="sync-label">마지막 동기화</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>데이터 관리</h3>
+                    <div class="settings-item">
+                        <label>작업 데이터 내보내기</label>
+                        <button onclick="app.exportData()" class="btn-export">작업 & 프로젝트 내보내기</button>
+                    </div>
+                    <div class="settings-item">
+                        <label>설정 내보내기</label>
+                        <button onclick="app.exportSettings()" class="btn-export">설정 내보내기</button>
+                    </div>
+                    <div class="settings-item">
+                        <label>데이터 가져오기</label>
+                        <input type="file" id="import-file" accept=".json" style="display: none;" onchange="app.importData(event)">
+                        <button onclick="document.getElementById('import-file').click()" class="btn-import">작업 데이터 가져오기</button>
+                    </div>
+                    <div class="settings-item">
+                        <label>설정 가져오기</label>
+                        <input type="file" id="import-settings-file" accept=".json" style="display: none;" onchange="app.importSettings(event)">
+                        <button onclick="document.getElementById('import-settings-file').click()" class="btn-import">설정 가져오기</button>
+                    </div>
+                    <div class="settings-item">
+                        <label>저장소 정보</label>
+                        <button onclick="app.showStorageInfo()" class="btn-info">저장소 상태 확인</button>
+                    </div>
+                    <div class="settings-item">
+                        <label>모든 데이터 삭제</label>
+                        <button onclick="app.clearAllData()" class="btn-danger">모든 데이터 삭제</button>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>통계</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="total-tasks">0</div>
+                            <div class="stat-label">전체 작업</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="completed-tasks">0</div>
+                            <div class="stat-label">완료된 작업</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="total-projects">0</div>
+                            <div class="stat-label">프로젝트</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="completion-rate">0%</div>
+                            <div class="stat-label">완료율</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Todoist 연결 모달 -->
+    <div id="todoist-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Todoist 연결</h3>
+                <button class="close-btn" onclick="app.closeTodoistModal()">&times;</button>
+            </div>
+            
+            <form id="todoist-form" onsubmit="app.connectTodoist(event)">
+                <div class="form-group">
+                    <label for="todoist-token">Todoist API 토큰</label>
+                    <input type="password" id="todoist-token" placeholder="API 토큰을 입력하세요" required>
+                    <div class="form-help">
+                        <strong>API 토큰 찾는 방법:</strong><br>
+                        1. <a href="https://todoist.com/app/settings/integrations" target="_blank">Todoist 설정 > 통합</a>에 접속<br>
+                        2. "개발자" 섹션에서 API 토큰 복사<br>
+                        3. 위 입력란에 붙여넣기
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="auto-sync" checked>
+                        자동 동기화 (5분마다)
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="app.closeTodoistModal()">취소</button>
+                    <button type="submit" class="btn-primary">연결하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Google Calendar 연결 모달 -->
+    <div id="google-calendar-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📅 Google Calendar 연결</h3>
+                <button class="close-btn" onclick="app.closeGoogleCalendarModal()">&times;</button>
+            </div>
+            
+            <form id="google-calendar-form" onsubmit="app.connectGoogleCalendar(event)">
+                <div class="form-group">
+                    <label for="calendar-url">캘린더 공유 URL</label>
+                    <input type="url" id="calendar-url" placeholder="Google Calendar 공유 URL을 입력하세요" required>
+                    <div class="form-help">
+                        <strong>캘린더 공유 URL 가져오는 방법:</strong><br>
+                        1. <a href="https://calendar.google.com" target="_blank">Google Calendar</a>에서 공유할 캘린더 선택<br>
+                        2. 캘린더 이름 옆 ⋮ 메뉴 → "설정 및 공유" 클릭<br>
+                        3. "액세스 권한" → "공개로 사용 설정" 체크<br>
+                        4. "캘린더 통합" → "공개 주소(iCal 형식)" URL 복사<br>
+                        5. 위 입력란에 붙여넣기
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="calendar-name">캘린더 이름 (선택사항)</label>
+                    <input type="text" id="calendar-name" placeholder="예: 업무 캘린더">
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="auto-sync-calendar" checked>
+                        자동 동기화 (10분마다)
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="app.closeGoogleCalendarModal()">취소</button>
+                    <button type="submit" class="btn-primary">연결하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- JIRA 연결 모달 -->
+    <div id="jira-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎯 JIRA 연결</h3>
+                <button class="close-btn" onclick="app.closeJiraModal()">&times;</button>
+            </div>
+            
+            <form id="jira-form" onsubmit="app.connectJira(event)">
+                <div class="form-group">
+                    <label for="jira-base-url">JIRA 베이스 URL</label>
+                    <input type="url" id="jira-base-url" placeholder="https://your-domain.atlassian.net" required>
+                    <div class="form-help">
+                        예시: https://company.atlassian.net 또는 https://jira.company.com
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jira-username">사용자명 (이메일)</label>
+                    <input type="email" id="jira-username" placeholder="your-email@company.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jira-api-token">API 토큰</label>
+                    <input type="password" id="jira-api-token" placeholder="JIRA API 토큰을 입력하세요" required>
+                    <div class="form-help">
+                        <strong>API 토큰 생성 방법:</strong><br>
+                        1. <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank">Atlassian 계정 설정</a>에 접속<br>
+                        2. "API 토큰 만들기" 클릭<br>
+                        3. 레이블 입력 후 "만들기" 클릭<br>
+                        4. 생성된 토큰을 복사하여 위 입력란에 붙여넣기
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jira-project-key">프로젝트 키</label>
+                    <input type="text" id="jira-project-key" placeholder="예: PROJ, DEV, TEST" required>
+                    <div class="form-help">
+                        JIRA 프로젝트의 키 (이슈 번호 앞에 붙는 접두사)
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jira-jql">JQL 쿼리 (선택사항)</label>
+                    <input type="text" id="jira-jql" placeholder='project = "PROJ" AND resolution = Unresolved'>
+                    <div class="form-help">
+                        비워두면 기본 쿼리 사용: project = "[프로젝트키]" AND resolution = Unresolved
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="auto-sync-jira" checked>
+                        자동 동기화 (15분마다)
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="app.closeJiraModal()">취소</button>
+                    <button type="submit" class="btn-primary">연결하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="/assets/js/storage-manager.js"></script>
+    <script src="/assets/js/integrations/todoist.js"></script>
+    <script src="/assets/js/integrations/todoist-mock.js"></script>
+    <script src="/assets/js/integrations/google-calendar-simple.js"></script>
+    <script src="/assets/js/integrations/google-calendar-simple-mock.js"></script>
+    <script src="/assets/js/integrations/jira.js"></script>
+    <script src="/assets/js/integrations/jira-mock.js"></script>
+    <script src="/assets/js/integrations/integration-manager.js"></script>
+    <script src="/assets/js/app.js"></script>
+    
+    <!-- 개발자 도구 -->
+    <div id="dev-tools" style="position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem; z-index: 9999; max-width: 200px;">
+        <div>🧪 개발자 도구</div>
+        <button onclick="toggleMockMode()" style="margin-top: 0.25rem; padding: 0.25rem 0.5rem; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem; display: block; width: 100%;">Todoist Mock</button>
+        <button onclick="toggleGoogleCalendarSimpleMockMode()" style="margin-top: 0.25rem; padding: 0.25rem 0.5rem; background: #4285f4; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem; display: block; width: 100%;">Calendar Mock</button>
+        <button onclick="toggleJiraMockMode()" style="margin-top: 0.25rem; padding: 0.25rem 0.5rem; background: #0052cc; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem; display: block; width: 100%;">JIRA Mock</button>
+    </div>
+</body>
+</html>
