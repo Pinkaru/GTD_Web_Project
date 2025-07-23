@@ -71,22 +71,42 @@ class ClarityMatrix {
 
     // Event Binding
     bindEvents() {
+        console.log('🔗 이벤트 바인딩 시작...');
+        
         // Task Form (Inbox)
         const taskForm = document.getElementById('task-form');
         if (taskForm) {
-            taskForm.addEventListener('submit', (e) => this.addTask(e));
+            console.log('✅ task-form 찾음, 이벤트 바인딩');
+            taskForm.addEventListener('submit', (e) => {
+                console.log('📝 작업 추가 이벤트 발생');
+                this.addTask(e);
+            });
+        } else {
+            console.log('❌ task-form을 찾을 수 없음');
         }
 
         // Project Form
         const projectForm = document.getElementById('project-form');
         if (projectForm) {
-            projectForm.addEventListener('submit', (e) => this.addProject(e));
+            console.log('✅ project-form 찾음, 이벤트 바인딩');
+            projectForm.addEventListener('submit', (e) => {
+                console.log('📁 프로젝트 추가 이벤트 발생');
+                this.addProject(e);
+            });
+        } else {
+            console.log('❌ project-form을 찾을 수 없음');
         }
 
         // Project Task Form
         const projectTaskForm = document.getElementById('project-task-form');
         if (projectTaskForm) {
-            projectTaskForm.addEventListener('submit', (e) => this.addProjectTask(e));
+            console.log('✅ project-task-form 찾음, 이벤트 바인딩');
+            projectTaskForm.addEventListener('submit', (e) => {
+                console.log('📋 프로젝트 작업 추가 이벤트 발생');
+                this.addProjectTask(e);
+            });
+        } else {
+            console.log('❌ project-task-form을 찾을 수 없음');
         }
 
         // Global keyboard shortcuts
@@ -99,11 +119,17 @@ class ClarityMatrix {
 
     // Task Management
     async addTask(e) {
+        console.log('🎯 addTask 메서드 호출됨');
         e.preventDefault();
         const taskInput = document.getElementById('task-input');
         const quadrantSelect = document.getElementById('task-quadrant-select');
         
-        if (!taskInput.value.trim()) return;
+        console.log('📝 입력값:', taskInput?.value, '우선순위:', quadrantSelect?.value);
+        
+        if (!taskInput.value.trim()) {
+            console.log('❌ 입력값이 비어있음');
+            return;
+        }
 
         const task = {
             id: this.generateId(),
@@ -116,6 +142,7 @@ class ClarityMatrix {
         };
 
         this.tasks.push(task);
+        console.log('✅ 작업 추가됨:', task);
         this.saveData();
         
         // 양방향 동기화: 연결된 외부 서비스에도 생성
@@ -140,6 +167,7 @@ class ClarityMatrix {
         }
         
         taskInput.value = '';
+        console.log('🔄 렌더링 시작...');
         this.render();
     }
 
@@ -217,10 +245,16 @@ class ClarityMatrix {
 
     // Project Management
     addProject(e) {
+        console.log('🎯 addProject 메서드 호출됨');
         e.preventDefault();
         const projectInput = document.getElementById('project-input');
         
-        if (!projectInput.value.trim()) return;
+        console.log('📁 프로젝트 입력값:', projectInput?.value);
+        
+        if (!projectInput.value.trim()) {
+            console.log('❌ 프로젝트명이 비어있음');
+            return;
+        }
 
         const project = {
             id: this.generateId(),
@@ -229,9 +263,11 @@ class ClarityMatrix {
         };
 
         this.projects.push(project);
+        console.log('✅ 프로젝트 추가됨:', project);
         this.saveData();
         
         projectInput.value = '';
+        console.log('🔄 렌더링 시작...');
         this.render();
     }
 
