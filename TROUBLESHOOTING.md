@@ -64,7 +64,26 @@ PORT=3001 npm run dev
 서버 로그 확인: `npm run dev`로 실행 시 콘솔 메시지 확인
 
 ## 개발 환경 상태
-- 서버: `http://localhost:3000` (개발 모드)
-- 모든 보안 헤더: 비활성화
+- HTTP 서버: `http://localhost:3000` (개발 모드)
+- HTTPS 서버: `https://localhost:3443` (자체 서명 인증서)
+- 모든 보안 헤더: 비활성화 (개발 모드)
 - 캐시: 비활성화
 - HTTPS 강제: 완전 비활성화
+
+## 🔒 HTTPS 사용법
+
+### 서버 시작
+```bash
+npm run https
+```
+
+### HTTPS 접속
+1. 브라우저에서 `https://localhost:3443` 접속
+2. 보안 경고 메시지가 나타남
+3. "고급" → "localhost(안전하지 않음)으로 이동" 클릭
+4. 모든 페이지가 HTTPS로 정상 작동
+
+### 포트 정보
+- HTTP: 포트 3000
+- HTTPS: 포트 3443
+- 두 서버 모두 동일한 기능 제공

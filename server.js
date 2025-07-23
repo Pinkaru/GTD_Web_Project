@@ -1,11 +1,15 @@
 const express = require('express');
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const HTTP_PORT = process.env.HTTP_PORT || 3000;
+const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
 const isDev = process.argv.includes('--dev');
 
 // 보안 미들웨어 (개발용 - HTTPS 강제 완전 비활성화)
@@ -145,20 +149,50 @@ app.use((err, req, res, next) => {
     });
 });
 
-// 서버 시작
-app.listen(PORT, () => {
+// SSL 인증서 설정
+let sslOptions = null;
+try {
+    sslOptions = {
+        key: fs.readFileSync(path.join(__dirname, 'ssl', 'key.pem')),
+        cert: fs.readFileSync(path.join(__dirname, 'ssl', 'cert.pem'))
+    };
+} catch (error) {
+    console.warn('SSL certificates not found. HTTPS server will not start.');
+}
+
+// HTTP 서버 시작
+const httpServer = http.createServer(app);
+httpServer.listen(HTTP_PORT, () => {
     console.log(`
 🚀 Clarity Matrix GTD System
 ============================
 Environment: ${isDev ? 'Development' : 'Production'}
-Server: http://localhost:${PORT}
-Health: http://localhost:${PORT}/health
+HTTP Server: http://localhost:${HTTP_PORT}
+Health: http://localhost:${HTTP_PORT}/health
 
-Available pages:
-${pages.map(page => `- http://localhost:${PORT}/${page}`).join('\n')}
-
-Press Ctrl+C to stop the server.
+Available pages (HTTP):
+${pages.map(page => `- http://localhost:${HTTP_PORT}/${page}`).join('\n')}
     `);
 });
 
-module.exports = app;
+// HTTPS 서버 시작 (SSL 인증서가 있는 경우에만)
+let httpsServer = null;
+if (sslOptions) {
+    httpsServer = https.createServer(sslOptions, app);
+    httpsServer.listen(HTTPS_PORT, () => {
+        console.log(`
+🔒 HTTPS Server: https://localhost:${HTTPS_PORT}
+Health: https://localhost:${HTTPS_PORT}/health
+
+Available pages (HTTPS):
+${pages.map(page => `- https://localhost:${HTTPS_PORT}/${page}`).join('\n')}
+
+⚠️  Self-signed certificate: Browser will show security warning
+    Click "Advanced" → "Proceed to localhost (unsafe)" to continue
+        `);
+    });
+}
+
+console.log('\nPress Ctrl+C to stop the servers.\n');
+
+module.exports = { app, httpServer, httpsServer };
