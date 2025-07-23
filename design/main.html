@@ -51,16 +51,23 @@
             <!-- 빠른 작업 추가 -->
             <div class="task-input-container">
                 <h3>빠른 작업 추가</h3>
-                <form id="quick-task-form">
-                    <input type="text" placeholder="새로운 작업을 입력하세요..." required>
-                    <select>
-                        <option value="urgent-important">긴급 & 중요</option>
-                        <option value="not-urgent-important" selected>긴급하지 않음 & 중요</option>
-                        <option value="urgent-not-important">긴급 & 중요하지 않음</option>
-                        <option value="not-urgent-not-important">긴급하지 않음 & 중요하지 않음</option>
+                <form id="task-form">
+                    <input type="text" id="task-input" placeholder="새로운 작업을 입력하세요..." required>
+                    <select id="task-quadrant-select">
+                        <option value="q1">긴급 & 중요</option>
+                        <option value="q2" selected>긴급하지 않음 & 중요</option>
+                        <option value="q3">긴급 & 중요하지 않음</option>
+                        <option value="q4">긴급하지 않음 & 중요하지 않음</option>
                     </select>
                     <button type="submit">추가</button>
                 </form>
+            </div>
+
+            <!-- 추가된 작업 목록 -->
+            <div class="task-list" style="display: none;">
+                <ul id="inbox-task-list">
+                    <!-- 자바스크립트로 작업이 여기에 추가됩니다 -->
+                </ul>
             </div>
 
             <!-- 아이젠하워 매트릭스 미리보기 -->

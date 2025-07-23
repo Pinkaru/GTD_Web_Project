@@ -1371,7 +1371,7 @@ ${info.connectedIntegrations.length > 0 ?
 let app;
 document.addEventListener('DOMContentLoaded', () => {
     app = new ClarityMatrix();
+    
+    // Global functions for onclick events (after app is initialized)
+    window.app = app;
 });
-
-// Global functions for onclick events
-window.app = app;
