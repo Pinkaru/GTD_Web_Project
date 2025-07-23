@@ -8,12 +8,23 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const isDev = process.argv.includes('--dev');
 
-// 보안 미들웨어 (개발용 - 제한적 보안 설정)
+// 보안 미들웨어 (개발용 - HTTPS 강제 완전 비활성화)
 if (isDev) {
-    // 개발 환경: CSP 비활성화, HTTPS 강제 없음
+    // 개발 환경: 모든 HTTPS 관련 보안 기능 비활성화
     app.use(helmet({
         contentSecurityPolicy: false,
-        hsts: false
+        hsts: false,
+        noSniff: false,
+        frameguard: false,
+        xssFilter: false,
+        referrerPolicy: false,
+        crossOriginOpenerPolicy: false,
+        crossOriginResourcePolicy: false,
+        crossOriginEmbedderPolicy: false,
+        originAgentCluster: false,
+        dnsPrefetchControl: false,
+        ieNoOpen: false,
+        permittedCrossDomainPolicies: false
     }));
 } else {
     // 프로덕션 환경: 완전한 보안 설정
