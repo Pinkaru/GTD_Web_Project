@@ -8,7 +8,14 @@ class ClarityMatrix {
         this.currentViewDate = new Date();
         
         // 설정 관리자 초기화
-        this.storageManager = new StorageManager();
+        try {
+            this.storageManager = new StorageManager();
+            console.log('✅ StorageManager 초기화 완료');
+        } catch (error) {
+            console.error('❌ StorageManager 초기화 실패:', error);
+            console.log('StorageManager 없이 계속 진행...');
+            this.storageManager = null;
+        }
         
         // 통합 관리자 초기화
         this.integrationManager = null;
@@ -277,6 +284,24 @@ class ClarityMatrix {
     }
 
     deleteProject(projectId) {
+        const project = this.projects.find(p => p.id === projectId);
+        if (!project) {
+            console.log('❌ 프로젝트를 찾을 수 없음:', projectId);
+            return;
+        }
+        
+        const taskCount = this.getTasksByProject(projectId).length;
+        const confirmMessage = taskCount > 0 
+            ? `"${project.name}" 프로젝트와 관련된 ${taskCount}개의 작업이 모두 삭제됩니다.\n정말 삭제하시겠습니까?`
+            : `"${project.name}" 프로젝트를 삭제하시겠습니까?`;
+        
+        if (!confirm(confirmMessage)) {
+            console.log('❌ 프로젝트 삭제 취소됨');
+            return;
+        }
+        
+        console.log('🗑️ 프로젝트 삭제:', project.name, `(작업 ${taskCount}개 포함)`);
+        
         // Remove project
         this.projects = this.projects.filter(p => p.id !== projectId);
         
@@ -288,6 +313,7 @@ class ClarityMatrix {
         }
         
         this.saveData();
+        console.log('✅ 프로젝트 삭제 완료');
         this.render();
     }
 
@@ -469,8 +495,13 @@ class ClarityMatrix {
             
             return `
                 <li class="${isSelected ? 'selected' : ''}" onclick="app.selectProject('${project.id}')">
-                    <div class="task-name">${project.name}</div>
-                    <div class="task-meta">${taskCount}개 작업</div>
+                    <div class="task-content">
+                        <div class="task-name">${project.name}</div>
+                        <div class="task-meta">${taskCount}개 작업</div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn-delete" onclick="event.stopPropagation(); app.deleteProject('${project.id}')" title="프로젝트 삭제">삭제</button>
+                    </div>
                 </li>
             `;
         }).join('');
