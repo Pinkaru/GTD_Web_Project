@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA 아이콘 생성기</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .icon-generator {
+            text-align: center;
+        }
+        #iconCanvas {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .controls {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        label {
+            font-weight: 600;
+            color: #374151;
+        }
+        input, select {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        .download-links {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .download-links a {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .download-links a:hover {
+            background: #059669;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Clarity Matrix PWA 아이콘 생성기</h1>
+        
+        <div class="icon-generator">
+            <canvas id="iconCanvas" width="512" height="512"></canvas>
+            
+            <div class="controls">
+                <div>
+                    <label for="bgColor">배경색:</label>
+                    <input type="color" id="bgColor" value="#2563eb">
+                </div>
+                <div>
+                    <label for="textColor">텍스트색:</label>
+                    <input type="color" id="textColor" value="#ffffff">
+                </div>
+                <div>
+                    <label for="iconText">아이콘 텍스트:</label>
+                    <input type="text" id="iconText" value="CM" maxlength="2">
+                </div>
+                <div>
+                    <label for="fontSize">폰트 크기:</label>
+                    <input type="range" id="fontSize" min="100" max="300" value="200">
+                </div>
+            </div>
+            
+            <button onclick="generateIcon()">아이콘 미리보기</button>
+            <button onclick="generateAllSizes()">모든 크기 생성</button>
+            
+            <div class="download-links" id="downloadLinks"></div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('iconCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function generateIcon(size = 512) {
+            const bgColor = document.getElementById('bgColor').value;
+            const textColor = document.getElementById('textColor').value;
+            const iconText = document.getElementById('iconText').value;
+            const fontSize = document.getElementById('fontSize').value;
+
+            // 캔버스 크기 설정
+            canvas.width = size;
+            canvas.height = size;
+
+            // 배경 그리기
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, size, size);
+
+            // 라운드 코너 효과 (선택사항)
+            ctx.beginPath();
+            const radius = size * 0.1;
+            ctx.roundRect(0, 0, size, size, radius);
+            ctx.fillStyle = bgColor;
+            ctx.fill();
+
+            // 텍스트 그리기
+            ctx.fillStyle = textColor;
+            ctx.font = `bold ${fontSize * (size/512)}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(iconText, size/2, size/2);
+
+            return canvas.toDataURL('image/png');
+        }
+
+        function generateAllSizes() {
+            const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+            const downloadLinks = document.getElementById('downloadLinks');
+            downloadLinks.innerHTML = '';
+
+            sizes.forEach(size => {
+                const dataUrl = generateIcon(size);
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = `icon-${size}x${size}.png`;
+                link.textContent = `📱 ${size}x${size} 다운로드`;
+                downloadLinks.appendChild(link);
+            });
+
+            // 원래 크기로 복원
+            generateIcon();
+        }
+
+        // 실시간 미리보기
+        document.getElementById('bgColor').addEventListener('input', () => generateIcon());
+        document.getElementById('textColor').addEventListener('input', () => generateIcon());
+        document.getElementById('iconText').addEventListener('input', () => generateIcon());
+        document.getElementById('fontSize').addEventListener('input', () => generateIcon());
+
+        // CanvasRenderingContext2D의 roundRect 폴리필
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+
+        // 초기 아이콘 생성
+        generateIcon();
+    </script>
+</body>
+</html>

@@ -75,6 +75,18 @@ app.use('/assets', express.static(path.join(__dirname, 'assets'), {
     }
 }));
 
+// PWA 관련 파일 서빙
+app.get('/manifest.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.sendFile(path.join(__dirname, 'manifest.json'));
+});
+
+app.get('/sw.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.sendFile(path.join(__dirname, 'sw.js'));
+});
+
 // 메인 페이지들 라우팅
 const pages = [
     'main',

@@ -417,31 +417,399 @@ body {
 }
 
 /* Responsive Design */
+/* PWA Specific Styles */
+.pwa-install-banner {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    z-index: 1000;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.pwa-install-banner.show {
+    display: block;
+}
+
+.pwa-banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pwa-banner-text {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.pwa-banner-text h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.pwa-banner-text p {
+    margin: 0;
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.pwa-banner-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-install, .btn-dismiss {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-install {
+    background: white;
+    color: #667eea;
+}
+
+.btn-dismiss {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.btn-install:hover, .btn-dismiss:hover {
+    transform: translateY(-1px);
+}
+
+/* Mobile Touch Optimizations */
 @media (max-width: 768px) {
+    * {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+    
+    input, textarea, button {
+        -webkit-user-select: auto;
+        user-select: auto;
+    }
+    
+    .container {
+        flex-direction: column;
+    }
+    
     .sidebar {
         width: 100%;
         position: relative;
         height: auto;
+        padding: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .sidebar h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .sidebar nav ul {
+        display: flex;
+        overflow-x: auto;
+        gap: 0.5rem;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .sidebar nav ul li {
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+    
+    .sidebar nav ul li a {
+        display: block;
+        padding: 0.5rem 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+    }
+    
+    .sidebar nav ul li a.active,
+    .sidebar nav ul li a:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-1px);
     }
     
     .main-content {
         margin-left: 0;
+        padding: 1rem;
+        min-height: calc(100vh - 100px);
     }
     
+    .main-content header h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .main-content header p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Mobile Stats Grid */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat-item {
+        padding: 1rem 0.75rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    /* Mobile Priority Cards */
+    .priority-overview {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .priority-card {
+        padding: 1rem;
+    }
+    
+    .priority-card h4 {
+        font-size: 0.9rem;
+    }
+    
+    .priority-card .task-count {
+        font-size: 1.5rem;
+    }
+    
+    .priority-card p {
+        font-size: 0.8rem;
+    }
+    
+    /* Mobile Eisenhower Matrix */
     .eisenhower-matrix {
         grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, 1fr);
+        grid-template-rows: repeat(4, auto);
         height: auto;
+        gap: 1rem;
     }
     
+    .matrix-quadrant {
+        min-height: 200px;
+    }
+    
+    .matrix-quadrant h3 {
+        font-size: 1rem;
+        padding: 0.75rem;
+    }
+    
+    /* Mobile Project Container */
     .project-container {
         grid-template-columns: 1fr;
         height: auto;
+        gap: 1.5rem;
     }
     
+    .project-list-container {
+        order: 2;
+    }
+    
+    .project-details-container {
+        order: 1;
+    }
+    
+    /* Mobile Forms */
     .task-input-container form {
         flex-direction: column;
         align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    .task-input-container input,
+    .task-input-container select,
+    .task-input-container button {
+        padding: 0.75rem;
+        font-size: 1rem;
+        border-radius: 8px;
+    }
+    
+    .task-input-container button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        font-weight: 600;
+        min-height: 48px; /* Touch target size */
+    }
+    
+    /* Mobile Task Lists */
+    .task-list li {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .task-content {
+        flex: 1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .task-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+    
+    .task-actions button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        min-height: 40px; /* Touch target size */
+        border-radius: 6px;
+    }
+    
+    /* Mobile Recent Activities */
+    .activity-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+    
+    .activity-time {
+        font-size: 0.8rem;
+        min-width: auto;
+    }
+    
+    .activity-text {
+        font-size: 0.9rem;
+    }
+    
+    /* Mobile Modal */
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+        max-width: none;
+        padding: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .form-actions button {
+        padding: 0.75rem;
+        min-height: 48px;
+    }
+    
+    /* Mobile Settings */
+    .settings-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1rem 0;
+    }
+    
+    /* PWA Install Banner Mobile */
+    .pwa-banner-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .pwa-banner-text {
+        margin-right: 0;
+    }
+    
+    .pwa-banner-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-install, .btn-dismiss {
+        flex: 1;
+        min-height: 44px;
+    }
+}
+
+/* Tablet Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+        padding: 1.5rem;
+    }
+    
+    .main-content {
+        margin-left: 220px;
+        padding: 1.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .priority-overview {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .eisenhower-matrix {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+    }
+    
+    .project-container {
+        grid-template-columns: 250px 1fr;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .task-list li:hover,
+    .priority-card:hover,
+    .stat-item:hover,
+    .activity-item:hover {
+        transform: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar nav ul li a:hover {
+        transform: none;
+        background: rgba(255, 255, 255, 0.25);
+    }
+    
+    button:hover {
+        transform: none;
+    }
+}
+
+/* iOS Safari Specific Fixes */
+@supports (-webkit-touch-callout: none) {
+    .main-content {
+        min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    }
+    
+    .pwa-install-banner {
+        bottom: env(safe-area-inset-bottom);
     }
 }
 
