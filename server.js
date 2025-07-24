@@ -8,8 +8,9 @@ const helmet = require('helmet');
 const compression = require('compression');
 
 const app = express();
-const HTTP_PORT = process.env.HTTP_PORT || 3000;
-const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
+const HTTP_PORT = process.env.HTTP_PORT || 8080;
+const HTTPS_PORT = process.env.HTTPS_PORT || 8443;
+const HOST = process.env.HOST || '0.0.0.0'; // 모든 네트워크 인터페이스에서 접속 허용
 const isDev = process.argv.includes('--dev');
 
 // 보안 미들웨어 (개발용 - HTTPS 강제 완전 비활성화)
@@ -172,18 +173,44 @@ try {
     console.warn('SSL certificates not found. HTTPS server will not start.');
 }
 
+// 로컬 IP 주소 가져오기
+function getLocalIP() {
+    const { networkInterfaces } = require('os');
+    const nets = networkInterfaces();
+    
+    for (const name of Object.keys(nets)) {
+        for (const net of nets[name]) {
+            // IPv4이고 내부 주소가 아닌 경우
+            if (net.family === 'IPv4' && !net.internal) {
+                return net.address;
+            }
+        }
+    }
+    return 'localhost';
+}
+
 // HTTP 서버 시작
 const httpServer = http.createServer(app);
-httpServer.listen(HTTP_PORT, () => {
+httpServer.listen(HTTP_PORT, HOST, () => {
+    const localIP = getLocalIP();
     console.log(`
 🚀 Clarity Matrix GTD System
 ============================
 Environment: ${isDev ? 'Development' : 'Production'}
-HTTP Server: http://localhost:${HTTP_PORT}
-Health: http://localhost:${HTTP_PORT}/health
+Host: ${HOST}
+Port: ${HTTP_PORT}
 
-Available pages (HTTP):
-${pages.map(page => `- http://localhost:${HTTP_PORT}/${page}`).join('\n')}
+📱 모바일 접속 주소:
+- Local: http://localhost:${HTTP_PORT}
+- Network: http://${localIP}:${HTTP_PORT}
+- Health: http://${localIP}:${HTTP_PORT}/health
+
+Available pages:
+${pages.map(page => `- http://${localIP}:${HTTP_PORT}/${page}`).join('\n')}
+
+🔗 PWA 설치:
+- 모바일에서 http://${localIP}:${HTTP_PORT}/main 접속
+- "홈 화면에 추가" 또는 "설치" 선택
     `);
 });
 
@@ -191,16 +218,21 @@ ${pages.map(page => `- http://localhost:${HTTP_PORT}/${page}`).join('\n')}
 let httpsServer = null;
 if (sslOptions) {
     httpsServer = https.createServer(sslOptions, app);
-    httpsServer.listen(HTTPS_PORT, () => {
+    httpsServer.listen(HTTPS_PORT, HOST, () => {
+        const localIP = getLocalIP();
         console.log(`
-🔒 HTTPS Server: https://localhost:${HTTPS_PORT}
-Health: https://localhost:${HTTPS_PORT}/health
+🔒 HTTPS Server Started
+=======================
+📱 모바일 HTTPS 접속 주소:
+- Local: https://localhost:${HTTPS_PORT}
+- Network: https://${localIP}:${HTTPS_PORT}
+- Health: https://${localIP}:${HTTPS_PORT}/health
 
-Available pages (HTTPS):
-${pages.map(page => `- https://localhost:${HTTPS_PORT}/${page}`).join('\n')}
+Available HTTPS pages:
+${pages.map(page => `- https://${localIP}:${HTTPS_PORT}/${page}`).join('\n')}
 
-⚠️  Self-signed certificate: Browser will show security warning
-    Click "Advanced" → "Proceed to localhost (unsafe)" to continue
+⚠️  Self-signed certificate: 브라우저에서 보안 경고 표시
+    "고급" → "localhost로 계속 진행(안전하지 않음)" 클릭하여 계속
         `);
     });
 }
