@@ -997,9 +997,13 @@ body {
     padding: 2rem;
     width: 90%;
     max-width: 500px;
+    max-height: 80vh;
     border-radius: 16px;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     animation: modalSlideIn 0.3s ease;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 @keyframes modalSlideIn {
@@ -1491,6 +1495,41 @@ body {
 
 .priority-card {
     animation: fadeInUp 0.5s ease forwards;
+}
+
+/* 모달 스크롤 개선 */
+.modal-content form {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.modal-content .form-actions {
+    flex-shrink: 0;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #e1e8ed;
+    background: white;
+    position: sticky;
+    bottom: 0;
+}
+
+/* 모바일에서 모달 높이 조정 */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 2% auto;
+        max-height: 95vh;
+        width: 95%;
+        padding: 1.5rem;
+    }
+    
+    .modal-header {
+        margin-bottom: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
 }
 
 .priority-card:nth-child(1) { animation-delay: 0.1s; }

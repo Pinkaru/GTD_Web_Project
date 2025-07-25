@@ -1257,9 +1257,17 @@ ${info.connectedIntegrations.length > 0 ?
         const jqlInput = document.getElementById('jira-jql');
         const autoSyncCheckbox = document.getElementById('auto-sync-jira');
         
-        if (!baseUrlInput.value.trim() || !usernameInput.value.trim() || 
-            !apiTokenInput.value.trim() || !projectKeyInput.value.trim()) {
-            alert('모든 필수 필드를 입력해주세요.');
+        // 필수 필드 확인 (API 토큰은 기존 연결이 있으면 선택적)
+        const jiraIntegration = this.integrationManager?.integrations.get('jira');
+        const hasExistingConnection = jiraIntegration && jiraIntegration.isConnected;
+        
+        if (!baseUrlInput.value.trim() || !usernameInput.value.trim() || !projectKeyInput.value.trim()) {
+            alert('베이스 URL, 사용자명, 프로젝트 키는 필수 입력 필드입니다.');
+            return;
+        }
+        
+        if (!apiTokenInput.value.trim() && !hasExistingConnection) {
+            alert('API 토큰을 입력해주세요.');
             return;
         }
 
@@ -1270,11 +1278,14 @@ ${info.connectedIntegrations.length > 0 ?
             submitBtn.textContent = '연결 중...';
             submitBtn.disabled = true;
 
-            // JIRA 연결
+            // JIRA 연결 (API 토큰이 비어있으면 기존 값 사용)
+            const apiToken = apiTokenInput.value.trim() || 
+                            (hasExistingConnection ? jiraIntegration.apiToken : '');
+            
             const result = await this.integrationManager.connectService('jira', {
                 baseUrl: baseUrlInput.value.trim(),
                 username: usernameInput.value.trim(),
-                apiToken: apiTokenInput.value.trim(),
+                apiToken: apiToken,
                 projectKey: projectKeyInput.value.trim().toUpperCase(),
                 jql: jqlInput.value.trim()
             });
@@ -1284,14 +1295,7 @@ ${info.connectedIntegrations.length > 0 ?
                 alert('JIRA 연결이 완료되었습니다!');
                 this.closeJiraModal();
                 
-                // 입력 필드 초기화
-                baseUrlInput.value = '';
-                usernameInput.value = '';
-                apiTokenInput.value = '';
-                projectKeyInput.value = '';
-                jqlInput.value = '';
-                
-                // UI 업데이트
+                // UI 업데이트 (입력 필드는 초기화하지 않음)
                 this.updateIntegrationUI();
                 
                 // 자동 동기화 설정
@@ -1430,6 +1434,49 @@ ${info.connectedIntegrations.length > 0 ?
                 timestamp: new Date(entry.timestamp).toLocaleString(),
                 data: entry.data?.count || entry.data?.error || ''
             })));
+        }
+    }
+
+    // JIRA 연결 모달 표시
+    showJiraConnect() {
+        const modal = document.getElementById('jira-modal');
+        if (modal) {
+            // 저장된 설정 불러오기
+            this.loadJiraSettings();
+            modal.style.display = 'block';
+        }
+    }
+
+    // JIRA 모달 닫기
+    closeJiraModal() {
+        const modal = document.getElementById('jira-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // 저장된 JIRA 설정 로드
+    loadJiraSettings() {
+        const jiraIntegration = this.integrationManager?.integrations.get('jira');
+        if (jiraIntegration && jiraIntegration.isConnected) {
+            // 저장된 값들을 폼에 채우기
+            const baseUrlInput = document.getElementById('jira-base-url');
+            const usernameInput = document.getElementById('jira-username');
+            const projectKeyInput = document.getElementById('jira-project-key');
+            const jqlInput = document.getElementById('jira-jql');
+            const autoSyncCheckbox = document.getElementById('auto-sync-jira');
+
+            if (baseUrlInput) baseUrlInput.value = jiraIntegration.baseUrl || '';
+            if (usernameInput) usernameInput.value = jiraIntegration.username || '';
+            if (projectKeyInput) projectKeyInput.value = jiraIntegration.projectKey || '';
+            if (jqlInput) jqlInput.value = jiraIntegration.jql || '';
+            if (autoSyncCheckbox) autoSyncCheckbox.checked = true; // 기본값
+            
+            // API 토큰은 보안상 표시하지 않음 (placeholder로 표시)
+            const apiTokenInput = document.getElementById('jira-api-token');
+            if (apiTokenInput && jiraIntegration.apiToken) {
+                apiTokenInput.placeholder = '이미 설정된 API 토큰 (변경하려면 새로 입력)';
+            }
         }
     }
 }
